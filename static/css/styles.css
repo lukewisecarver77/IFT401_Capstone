@@ -1,0 +1,376 @@
+/* ============================= */
+/* Global Styles: Body, Fonts, Colors */
+/* ============================= */
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px;
+    color: #333333;
+    background-color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #8C1D40;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #FFC627;
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ============================= */
+/* Headings And Paragraphs */
+/* ============================= */
+
+h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+}
+
+p {
+    margin: 0 0 15px 0;
+}
+
+/* ============================= */
+/* Header & Navigation - Centered */
+/* ============================= */
+
+header {
+    background-color: #8C1D40;
+    color: #FFFFFF;
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+    display: inline-flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #FFFFFF;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #FFC627;
+    color: #8C1D40;
+    border-radius: 5px;
+}
+
+/* ============================= */
+/* Buttons & Forms */
+/* ============================= */
+
+/* General Button Styles */
+button {
+    background-color: #8C1D40;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+    background-color: #FFC627;
+    color: #8C1D40;
+}
+
+/* Form Inputs */
+input,
+select {
+    padding: 8px 10px;
+    font-size: 16px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Form Labels */
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* Form Containers */
+form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================= */
+/* Tables - Portfolio, Market Stocks, Transactions */
+/* ============================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+thead {
+    background-color: #8C1D40;
+    color: #FFFFFF;
+}
+
+thead th {
+    padding: 10px;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #F9F9F9;
+}
+
+tbody tr:hover {
+    background-color: #FFC627;
+    color: #8C1D40;
+}
+
+table th,
+table td {
+    text-align: center;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+    }
+
+    tbody td {
+        padding: 10px;
+        text-align: right;
+        position: relative;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: 600;
+        text-align: left;
+    }
+}
+
+/* ============================= */
+/* Page Sections: Cash Balance, Market Stocks, Trade Forms */
+/* ============================= */
+
+/* Section Container */
+section {
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Titles */
+section h2 {
+    text-align: center;
+    color: #8C1D40;
+    margin-bottom: 20px;
+}
+
+/* Cash Balance Display */
+#cash-balance p {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    color: #333333;
+}
+
+/* Trade Forms & Inputs */
+#trade-form,
+#deposit-funds,
+#withdraw-funds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Buttons inside sections */
+section button {
+    align-self: center;
+    width: 150px;
+}
+
+/* ============================= */
+/* Interactive Elements & Animations */
+/* ============================= */
+
+/* Button hover animations: slightly grow on hover */
+button {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Table row hover animation: smooth color transition */
+tbody tr {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Input focus effect */
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #8C1D40;
+    box-shadow: 0 0 5px rgba(140, 29, 64, 0.5);
+}
+
+/* Probably Permanently Delete But Keeping For Now Commented Out*/
+/* Section hover effect */
+/* section:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+} */
+
+/* Links with underline animation */
+a {
+    position: relative;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #FFC627;
+    transition: width 0.3s ease;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+/* ============================= */
+/* Center Specific Buttons & Footer */
+/* ============================= */
+
+/* Login/Register Buttons - typically in forms or nav */
+#login-button,
+#register-button,
+#submit-order,
+#cancel-order,
+#create-stock,
+#update-market-settings {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Footer text */
+footer p {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* General form buttons fallback (if any are inside forms) */
+form button {
+    display: block;
+    margin: 10px auto;
+}
+
+/* ============================= */
+/* Center Login & Register Buttons on Index Page */
+/* ============================= */
+
+#user-actions {
+    text-align: center;
+}
+
+#user-actions button {
+    display: inline-block;
+    margin: 10px;
+}
+
+/* ============================= */
+/* Center login/register footer text */
+/* ============================= */
+
+#login-form p,
+#register-form p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+#login-form p a,
+#register-form p a {
+    color: #8C1D40;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+#login-form p a:hover,
+#register-form p a:hover {
+    color: #FFC627;
+}
