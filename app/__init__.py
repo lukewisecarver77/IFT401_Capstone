@@ -1,8 +1,8 @@
-# app/__init__.py
 from flask import Flask
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from .models import db, User
+from app.routes.admin_routes import admin_bp
 
 login_manager = LoginManager()
 migrate = Migrate()

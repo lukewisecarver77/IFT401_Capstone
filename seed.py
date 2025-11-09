@@ -1,11 +1,10 @@
-# seed.py
-from run import app        # your Flask app from run.py
+from run import app        
 from app.database import db
 from app.models import User, Stock
-from run import bcrypt      # bcrypt instance from run.py
+from run import bcrypt      
 
 with app.app_context():
-    # Drop and recreate tables (optional)
+    
     db.drop_all()
     db.create_all()
 
