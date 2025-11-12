@@ -30,16 +30,19 @@
     <main>
         <section id="market-overview">
             <h2>Market Overview</h2>
-            <!-- Placeholder for stock table -->
-            <div class="stock-table-placeholder">
-                <p>Stock data will appear here.</p>
-            </div>
-        </section>
-
-        <section id="user-actions">
-            <h2>Get Started</h2>
-            <button onclick="location.href='login.html'">Login</button>
-            <button onclick="location.href='register.html'">Register</button>
+            <table id="stock-table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Company Name</th>
+                        <th>Price</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Stock rows inserted here -->
+                </tbody>
+            </table>
         </section>
     </main>
 
