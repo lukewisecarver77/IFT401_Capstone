@@ -99,3 +99,29 @@ def stock_sell(username, ticker, quantity):
         'message': f"Sold {quantity} shares of {ticker} at ${price_current:.2f} each.",
         'new_balance': user.balance
     }
+
+def view_portfolio(username):
+    """Display portfolio of a user."""
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return {'error': 'User not found.'}, 404
+    
+    portfolio = Portfolio.query.filter_by(user_id=user.id)
+    if portfolio:
+        return {portfolio}
+    else:
+        return {'error': 'Portfolio not found'}, 404
+    
+def view_transactions(username):
+    """Display user transactions."""
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return {'error': 'User not found.'}, 404
+    
+    transactions = Transaction.query.filter_by(user_id=user.id)
+    if transactions:
+        return {transactions}
+    else:
+        return {'error': 'No transactions found for user.'}, 404
