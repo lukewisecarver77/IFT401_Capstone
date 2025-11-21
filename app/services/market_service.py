@@ -1,6 +1,8 @@
 from app.models import db, Stock, MarketSettings
 from datetime import time
 
+# Functions for Admin Market Actions
+
 def create_stock(company_name, ticker, volume, initial_price):
     """Create a new stock entry (admin function)."""
     existing_stock = Stock.query.filter_by(ticker=ticker).first()

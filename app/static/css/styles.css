@@ -1,7 +1,4 @@
-/* ============================= */
 /* Global Styles: Body, Fonts, Colors */
-/* ============================= */
-
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 16px;
@@ -27,9 +24,7 @@ a:hover {
     padding: 20px;
 }
 
-/* ============================= */
 /* Headings And Paragraphs */
-/* ============================= */
 
 h1 {
     font-size: 32px;
@@ -53,9 +48,7 @@ p {
     margin: 0 0 15px 0;
 }
 
-/* ============================= */
-/* Header & Navigation - Centered */
-/* ============================= */
+/* Header & Navigation */
 
 header {
     background-color: #8C1D40;
@@ -93,9 +86,7 @@ nav ul li a:hover {
     border-radius: 5px;
 }
 
-/* ============================= */
 /* Buttons & Forms */
-/* ============================= */
 
 /* General Button Styles */
 button {
@@ -144,9 +135,7 @@ form {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ============================= */
-/* Tables - Portfolio, Market Stocks, Transactions */
-/* ============================= */
+/* Tables: Portfolio, Market Stocks, Transactions */
 
 table {
     width: 100%;
@@ -215,9 +204,8 @@ table td {
     }
 }
 
-/* ============================= */
+
 /* Page Sections: Cash Balance, Market Stocks, Trade Forms */
-/* ============================= */
 
 /* Section Container */
 section {
@@ -259,11 +247,9 @@ section button {
     width: 150px;
 }
 
-/* ============================= */
-/* Interactive Elements & Animations */
-/* ============================= */
+/* Interactive elements & animations */
 
-/* Button hover animations: slightly grow on hover */
+/* button hover animations: grow on hover */
 button {
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
@@ -272,7 +258,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Table row hover animation: smooth color transition */
+/* table row hover animation: smooth color transition */
 tbody tr {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -312,11 +298,9 @@ a:hover::after {
     width: 100%;
 }
 
-/* ============================= */
 /* Center Specific Buttons & Footer */
-/* ============================= */
 
-/* Login/Register Buttons - typically in forms or nav */
+/* Login/Register Buttons */
 #login-button,
 #register-button,
 #submit-order,
@@ -333,15 +317,13 @@ footer p {
     margin: 20px 0;
 }
 
-/* General form buttons fallback (if any are inside forms) */
+/* General form buttons fallback */
 form button {
     display: block;
     margin: 10px auto;
 }
 
-/* ============================= */
 /* Center Login & Register Buttons on Index Page */
-/* ============================= */
 
 #user-actions {
     text-align: center;
@@ -352,9 +334,7 @@ form button {
     margin: 10px;
 }
 
-/* ============================= */
 /* Center login/register footer text */
-/* ============================= */
 
 #login-form p,
 #register-form p {
@@ -373,4 +353,204 @@ form button {
 #login-form p a:hover,
 #register-form p a:hover {
     color: #FFC627;
+}
+
+/* Current Market Settings Display */
+#current-market-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 30px auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+#current-market-settings p {
+    background-color: #FFFFFF;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+}
+
+#current-market-settings p span.label {
+    color: #8C1D40;
+}
+
+#current-market-settings p span.value {
+    color: #333333;
+    font-weight: 400;
+}
+
+
+/* Success/Error login message */
+.error-message {
+    color: #b30000;
+    background: #ffe5e5;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.success-message {
+    color: #0b7400;
+    background: #e1ffe1;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* Make the form inline and remove default spacing */
+.nav-logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+/* Annoying Nav buttons */
+
+.nav-logout-button {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-weight: 500;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -8px;
+    line-height: normal;
+}
+
+.nav-logout-button:hover {
+    background-color: #FFC627;
+    color: #8C1D40;
+    border-radius: 5px;
+}
+
+nav ul li {
+    display: inline-block;
+    line-height: 1;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-left: 10px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #8C1D40;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.arrow-btn {
+    font-size: 14px;
+    padding: 0 5px;
+    margin-left: 5px;
+    cursor: pointer;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.popup {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 5px;
+    background-color: #8C1D40;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.popup.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Calendar */
+#holiday-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.calendar-day {
+    padding: 5px;
+    text-align: center;
+    border-radius: 3px;
+    background-color: #e0ffe0;
+    cursor: default;
+}
+
+.calendar-day.holiday,
+.calendar-day.weekend {
+    background-color: #ffcccc;
+    opacity: 0.6;
+}
+
+.calendar-day.today {
+    border: 2px solid #8C1D40;
+}
+
+/* Market setting divs did something weird but i'm leaving it */
+.market-setting {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.market-setting .label {
+    font-weight: bold;
 }
