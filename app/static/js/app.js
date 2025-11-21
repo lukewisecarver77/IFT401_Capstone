@@ -1,5 +1,3 @@
-// static/js/app.js
-
 const API_BASE_URL = "";
 
 // --- Helper for API calls ---
@@ -22,34 +20,36 @@ async function apiRequest(endpoint, method = "GET", data = null) {
     }
 }
 
+// Loads Current Market Stocks
 async function loadMarketOverview() {
     const data = await apiRequest("/market/stocks");
-    const container = document.querySelector(".stock-table-placeholder");
+    const tbody = document.querySelector("#stock-table tbody");
+
+    if (!tbody) {
+        console.error("Table body #stock-table tbody not found.");
+        return;
+    }
+
+    tbody.innerHTML = "";
 
     if (data && Array.isArray(data.stocks) && data.stocks.length > 0) {
-        // Build table
-        let html = `<table>
-                        <thead>
-                            <tr>
-                                <th>Ticker</th>
-                                <th>Company</th>
-                                <th>Price</th>
-                                <th>Volume</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+
         data.stocks.forEach(stock => {
-            html += `<tr>
-                        <td>${stock.ticker}</td>
-                        <td>${stock.company_name}</td>
-                        <td>${stock.price.toFixed(2)}</td>
-                        <td>${stock.volume}</td>
-                    </tr>`;
+            const row = `
+                <tr>
+                    <td>${stock.ticker}</td>
+                    <td>${stock.company_name}</td>
+                    <td>${stock.price.toFixed(2)}</td>
+                    <td>${stock.volume}</td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML("beforeend", row);
         });
-        html += `</tbody></table>`;
-        container.innerHTML = html;
+
     } else {
-        container.innerHTML = "<p>No stocks available.</p>";
+        tbody.innerHTML = `<tr><td colspan="4">No stocks available.</td></tr>`;
     }
 }
 
+
+document.addEventListener("DOMContentLoaded", loadMarketOverview);

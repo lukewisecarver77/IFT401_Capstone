@@ -9,6 +9,7 @@ from sqlalchemy import text
 
 db = SQLAlchemy()
 
+# User DB Model
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(120), nullable=False)
@@ -22,6 +23,7 @@ class User(db.Model, UserMixin):
     portfolios = db.relationship("Portfolio", backref="user", lazy=True)
     transactions = db.relationship("Transaction", backref="user", lazy=True)
 
+# Stock DB Model
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String(100), nullable=False)
@@ -35,12 +37,14 @@ class Stock(db.Model):
     portfolios = db.relationship("Portfolio", backref="stock", lazy=True)
     transactions = db.relationship("Transaction", backref="stock", lazy=True)
 
+# Portfolio DB Model
 class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey("stock.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
+# Trasaction DB Mode
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -50,7 +54,7 @@ class Transaction(db.Model):
     type = db.Column(db.String(10), nullable=False)
     timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
-
+# Market Settings DB Model
 class MarketSettings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     open_time = db.Column(db.Time, nullable=False, server_default=text("'09:00:00'"))
