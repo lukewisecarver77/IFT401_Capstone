@@ -217,6 +217,17 @@ function renderHolidayCalendar(holidays = [], weekdaysOnly = true) {
     }
 }
 
+async function saveHolidays() {
+    const { ok, data } = await apiRequest("/admin/update_market_schedule", "POST", {
+        weekdays_only: document.querySelector("#weekdays-value").textContent === "Yes",
+        holidays: interactiveHolidays
+    });
+    if (!ok) return showMessage(data.error || "Failed to save holidays", true);
+    showMessage("Holidays saved successfully!");
+    loadMarketSettings(); // refresh calendar and display
+}
+
+
 // Init
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -240,6 +251,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.getElementById("weekdays-up").addEventListener("click", () => toggleWeekdays(true));
         document.getElementById("weekdays-down").addEventListener("click", () => toggleWeekdays(false));
+        document.getElementById("save-holidays-btn").addEventListener("click", saveHolidays);
+
 
     } catch (err) {
         console.error(err);

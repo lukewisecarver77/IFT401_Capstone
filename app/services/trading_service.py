@@ -1,7 +1,8 @@
 # app/services/trading_service.py
 from datetime import datetime, timezone
 from typing import Dict, Any, List
-from app.models import db, User, Stock, Portfolio, Transaction
+from app.models import db, User, Stock, Portfolio, Transaction, MarketSettings
+from sqlalchemy.orm.exc import NoResultFound
 
 # Functions for Trading Actions for Accounts (had to add some extra to get things to work)
 
@@ -31,9 +32,43 @@ def stock_price(ticker: str) -> float:
 
 
 
+def _check_market_open():
+    """Raises ValueError if the market is currently closed."""
+    try:
+        settings = MarketSettings.query.first()
+    except NoResultFound:
+        # If settings table is empty, allow trading by default
+        return
+
+    if not settings:
+        return
+
+    now = datetime.now(timezone.utc)
+    today_str = now.date().isoformat()
+    weekday = now.weekday()  # Monday=0, Sunday=6
+
+    if settings.holidays and today_str in settings.holidays:
+        raise ValueError("Market is closed today for a holiday.")
+
+    if settings.weekdays_only and weekday >= 5:
+        raise ValueError("Market is closed on weekends.")
+
+    open_dt = datetime.combine(now.date(), settings.open_time).replace(tzinfo=timezone.utc)
+    close_dt = datetime.combine(now.date(), settings.close_time).replace(tzinfo=timezone.utc)
+
+    if not (open_dt <= now <= close_dt):
+        raise ValueError(
+            f"Market is closed. Trading hours are {settings.open_time.strftime('%H:%M')}–{settings.close_time.strftime('%H:%M')} UTC."
+        )
+
+
+
+
 
 
 def stock_buy(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
+    _check_market_open()
+
     if quantity <= 0:
         raise ValueError("Quantity must be a positive integer.")
 
@@ -80,6 +115,8 @@ def stock_buy(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
 
 
 def stock_sell(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
+    _check_market_open()
+    
     if quantity <= 0:
         raise ValueError("Quantity must be a positive integer.")
 
