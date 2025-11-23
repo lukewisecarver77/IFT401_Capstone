@@ -1,36 +1,78 @@
 const API_BASE_URL = "";
 
+// API Request Helper 
 async function apiRequest(endpoint, method = "GET", data = null) {
     const options = {
         method,
         headers: { "Content-Type": "application/json" },
         credentials: "include"
     };
-
     if (data) options.body = JSON.stringify(data);
 
     try {
         const res = await fetch(`${API_BASE_URL}${endpoint}`, options);
-        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-        return await res.json();
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || `Request failed: ${res.status}`);
+        return json;
     } catch (err) {
         console.error("API error:", err);
-        return null;
+        return { error: err.message || "API error" };
     }
 }
 
-// Load Current Market Stocks
+// Market Status
+let marketOpen = true;
+
+async function checkMarketStatus() {
+    const settings = await apiRequest("/admin/market_settings");
+    if (settings.error) {
+        console.warn("Could not fetch market settings:", settings.error);
+        marketOpen = true;
+        return;
+    }
+
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+    const currentTime = now.getHours() + now.getMinutes() / 60;
+
+    let openHour = 9, closeHour = 16;
+    if (settings.open_time) openHour = parseInt(settings.open_time.split(":")[0]) + parseInt(settings.open_time.split(":")[1]) / 60;
+    if (settings.close_time) closeHour = parseInt(settings.close_time.split(":")[0]) + parseInt(settings.close_time.split(":")[1]) / 60;
+
+    const weekday = now.getDay(); // 0 = Sunday, 6 = Saturday
+    const isWeekend = settings.weekdays_only && (weekday === 0 || weekday === 6);
+    const isHoliday = settings.holidays?.includes(todayStr);
+
+    marketOpen = !isWeekend && !isHoliday && currentTime >= openHour && currentTime <= closeHour;
+
+    const tradeMessageEl = document.getElementById("trade-status-message");
+    if (!tradeMessageEl) {
+        const msg = document.createElement("div");
+        msg.id = "trade-status-message";
+        msg.style.color = "#b71c1c";
+        msg.style.fontWeight = "bold";
+        msg.style.margin = "5px 0";
+        const parent = document.querySelector("#buy-form")?.parentElement || document.body;
+        parent.insertBefore(msg, parent.firstChild);
+    }
+
+    document.getElementById("trade-status-message").textContent = marketOpen ? "" : "Cannot trade outside of market hours or on holidays";
+
+    document.querySelector("#buy-form button").disabled = !marketOpen;
+    document.querySelector("#sell-form button").disabled = !marketOpen;
+}
+
+// Load Stocks
 async function loadMarketStocks() {
     const data = await apiRequest("/trade/stocks");
     const tbody = document.querySelector("#market-stocks tbody");
     const buySelect = document.querySelector("#buy-stock-select");
-
     if (!tbody || !buySelect) return;
 
     tbody.innerHTML = "";
     buySelect.innerHTML = '<option value="">--Choose Stock--</option>';
 
-    if (data && Array.isArray(data.stocks)) {
+    if (data?.stocks?.length) {
         data.stocks.forEach(stock => {
             tbody.insertAdjacentHTML("beforeend", `
                 <tr>
@@ -49,7 +91,7 @@ async function loadMarketStocks() {
     }
 }
 
-
+// Load User Portfolio
 async function loadUserData() {
     const userData = await apiRequest("/users/me");
     if (!userData) return;
@@ -67,18 +109,16 @@ async function loadUserData() {
     if (!sellSelect) return;
     sellSelect.innerHTML = '<option value="">--Choose Stock--</option>';
 
-    if (portfolioData && Array.isArray(portfolioData.portfolio) && portfolioData.portfolio.length > 0) {
+    if (portfolioData?.portfolio?.length) {
         portfolioData.portfolio.forEach(item => {
-            const row = `
+            tableBody.insertAdjacentHTML("beforeend", `
                 <tr>
                     <td>${item.ticker}</td>
                     <td>${item.quantity}</td>
                     <td>$${item.current_price.toFixed(2)}</td>
                     <td>$${item.total_value.toFixed(2)}</td>
                 </tr>
-            `;
-            tableBody.insertAdjacentHTML("beforeend", row);
-
+            `);
             sellSelect.insertAdjacentHTML("beforeend",
                 `<option value="${item.ticker}" data-price="${item.current_price}">${item.ticker} - ${item.company_name ?? item.ticker}</option>`);
         });
@@ -88,8 +128,13 @@ async function loadUserData() {
     }
 }
 
+// Trade Handling 
 async function handleTrade(event, action) {
     event.preventDefault();
+    if (!marketOpen) {
+        alert("Cannot trade outside of market hours or on holidays.");
+        return;
+    }
 
     const selectEl = action === "buy" ? document.querySelector("#buy-stock-select") : document.querySelector("#sell-stock-select");
     const qtyEl = action === "buy" ? document.querySelector("#buy-quantity") : document.querySelector("#sell-quantity");
@@ -104,9 +149,7 @@ async function handleTrade(event, action) {
     }
 
     const total = (price * quantity).toFixed(2);
-    const confirmMsg = `Confirm ${action} of ${quantity} shares of ${stock} for $${total}?`;
-
-    if (!confirm(confirmMsg)) {
+    if (!confirm(`Confirm ${action} of ${quantity} shares of ${stock} for $${total}?`)) {
         alert("Trade cancelled.");
         return;
     }
@@ -127,13 +170,12 @@ async function handleTrade(event, action) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Initialization
+document.addEventListener("DOMContentLoaded", async () => {
+    await checkMarketStatus();
     loadMarketStocks();
     loadUserData();
 
     document.querySelector("#buy-form").addEventListener("submit", e => handleTrade(e, "buy"));
     document.querySelector("#sell-form").addEventListener("submit", e => handleTrade(e, "sell"));
-    document.querySelector("#buy-quantity").value = "";
-    document.querySelector("#sell-quantity").value = "";
-
 });
