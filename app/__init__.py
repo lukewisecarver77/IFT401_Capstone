@@ -14,6 +14,8 @@ from .routes.page_routes import page_bp
 login_manager = LoginManager()
 migrate = Migrate()
 
+from .services import trading_service
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
@@ -39,4 +41,8 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # Start scheduler here and pass app instance
+    trading_service.start_scheduler(app)
+
     return app
+

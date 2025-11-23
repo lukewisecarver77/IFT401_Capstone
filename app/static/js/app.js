@@ -39,7 +39,7 @@ async function loadMarketOverview() {
                 <tr>
                     <td>${stock.ticker}</td>
                     <td>${stock.company_name}</td>
-                    <td>${stock.price.toFixed(2)}</td>
+                    <td>$${stock.price.toFixed(2)}</td>
                     <td>${stock.volume}</td>
                 </tr>
             `;
