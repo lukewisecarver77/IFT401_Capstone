@@ -1,10 +1,12 @@
-# app/services/trading_service.py
 from datetime import datetime, timezone
 from typing import Dict, Any, List
 from app.models import db, User, Stock, Portfolio, Transaction, MarketSettings
 from sqlalchemy.orm.exc import NoResultFound
+from apscheduler.schedulers.background import BackgroundScheduler
+import random
+from flask import Flask
 
-# Functions for Trading Actions for Accounts (had to add some extra to get things to work)
+# Functions for Trading Actions
 
 def _get_user_by_username(username: str) -> User:
     user = User.query.filter_by(username=username).first()
@@ -24,20 +26,11 @@ def stock_price(ticker: str) -> float:
         raise ValueError(f"Price not available for {ticker}")
     return stock.price
 
-
-
-
-
-# Project Required Functions Below
-
-
-
 def _check_market_open():
     """Raises ValueError if the market is currently closed."""
     try:
         settings = MarketSettings.query.first()
     except NoResultFound:
-        # If settings table is empty, allow trading by default
         return
 
     if not settings:
@@ -61,10 +54,7 @@ def _check_market_open():
             f"Market is closed. Trading hours are {settings.open_time.strftime('%H:%M')}–{settings.close_time.strftime('%H:%M')} UTC."
         )
 
-
-
-
-
+# Trading Functions
 
 def stock_buy(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
     _check_market_open()
@@ -105,14 +95,12 @@ def stock_buy(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
         timestamp=datetime.now(timezone.utc)
     )
     db.session.add(transaction)
-
     db.session.commit()
 
     return {
         "message": f"Bought {quantity} shares of {ticker} at ${price_current:.2f} each.",
         "new_balance": user.balance
     }
-
 
 def stock_sell(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
     _check_market_open()
@@ -148,7 +136,6 @@ def stock_sell(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
         timestamp=datetime.now(timezone.utc)
     )
     db.session.add(transaction)
-
     db.session.commit()
 
     return {
@@ -156,6 +143,7 @@ def stock_sell(username: str, ticker: str, quantity: int) -> Dict[str, Any]:
         "new_balance": user.balance
     }
 
+# View Functions
 
 def view_portfolio(username: str) -> List[Dict[str, Any]]:
     user = _get_user_by_username(username)
@@ -171,7 +159,6 @@ def view_portfolio(username: str) -> List[Dict[str, Any]]:
         })
     return result
 
-
 def view_transactions(username: str) -> List[Dict[str, Any]]:
     user = _get_user_by_username(username)
     transactions = Transaction.query.filter_by(user_id=user.id).order_by(Transaction.timestamp.desc()).all()
@@ -186,3 +173,30 @@ def view_transactions(username: str) -> List[Dict[str, Any]]:
             "timestamp": t.timestamp.strftime("%Y-%m-%d %H:%M:%S")
         })
     return result
+
+# Random Stock Price Generator
+
+scheduler = BackgroundScheduler()
+
+def random_price_update(app: Flask):
+    """Update stock prices randomly while market is open, rounding to nearest 0."""
+    with app.app_context():
+        try:
+            _check_market_open()
+        except ValueError:
+            return
+
+        stocks = Stock.query.all()
+        for stock in stocks:
+            if stock.price is None:
+                continue
+            change_percent = random.uniform(-0.02, 0.02)
+            stock.price = round(stock.price * (1 + change_percent))
+
+        db.session.commit()
+        print(f"[{datetime.now()}] Random stock prices updated.")
+
+def start_scheduler(app: Flask):
+    # Run every 10 seconds for testing
+    scheduler.add_job(random_price_update, "interval", minutes=1, args=[app])
+    scheduler.start()

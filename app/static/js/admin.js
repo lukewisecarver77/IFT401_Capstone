@@ -65,7 +65,7 @@ async function loadStocks() {
                 <td>${stock.company_name}</td>
                 <td>${stock.ticker}</td>
                 <td>${stock.volume}</td>
-                <td>${stock.price.toFixed(2)}</td>
+                <td>$${stock.price.toFixed(2)}</td>
                 <td>
                     <button class="edit-btn" data-ticker="${stock.ticker}">Edit</button>
                     <button class="delete-btn" data-ticker="${stock.ticker}">Delete</button>
