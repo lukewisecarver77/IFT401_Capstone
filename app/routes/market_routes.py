@@ -30,6 +30,11 @@ def stocks_data():
             "ticker": stock.ticker,
             "company_name": stock.company_name,
             "price": stock.price,
-            "volume": stock.volume
+            "volume": stock.volume,
+            "market_cap": round(stock.price * stock.volume, 2) if stock.price and stock.volume else None,
+            "high": stock.high,
+            "low": stock.low,
+            "opening_price": stock.price  # placeholder if you don't have a separate field
         })
     return jsonify(stock_list), 200
+
